@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledgerline — Invoicing built for solo work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F6F3;
+    --panel:#FFFFFF;
+    --ink:#1B1A22;
+    --violet:#5B3DF5;
+    --violet-deep:#3F2AB8;
+    --mute:#6E6C78;
+    --line:rgba(27,26,34,0.1);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:'Work Sans',sans-serif; line-height:1.6; overflow-x:hidden;}
+  h1,h2,h3{font-family:'Sora', sans-serif; font-weight:600; letter-spacing:-0.01em;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+  .wrap{max-width:1140px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){.wrap{padding:0 20px;}}
+
+  nav{padding:24px 0; border-bottom:1px solid var(--line);}
+  nav .wrap{display:flex; justify-content:space-between; align-items:center;}
+  .brand{font-family:'Sora'; font-weight:700; font-size:19px;}
+  .brand span{color:var(--violet);}
+  .nav-links{display:flex; gap:28px; font-size:14px; color:var(--mute);}
+  .nav-links a{transition:color .2s ease;}
+  .nav-links a:hover{color:var(--ink);}
+  @media (max-width:768px){.nav-links{display:none;}}
+  .nav-cta{background:var(--ink); color:#fff; padding:9px 18px; border-radius:6px; font-size:14px; font-weight:500; transition:background .2s ease;}
+  .nav-cta:hover{background:var(--violet);}
+
+  .hero{padding:88px 0 40px; display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; opacity:0; transform:translateY(16px); animation:heroIn .7s ease forwards .1s;}
+  @keyframes heroIn{to{opacity:1; transform:translateY(0);}}
+  @media (max-width:900px){.hero{grid-template-columns:1fr;}}
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:8px; font-size:13px; color:var(--violet-deep);
+    background:rgba(91,61,245,0.09); padding:6px 12px; border-radius:20px; margin-bottom:22px; font-weight:500;
+  }
+  .hero h1{font-size:clamp(32px,4.6vw,48px); line-height:1.1;}
+  .hero p{margin-top:20px; color:var(--mute); font-size:17px; max-width:440px;}
+  .hero-ctas{display:flex; gap:12px; margin-top:32px;}
+  .btn-primary{background:var(--violet); color:#fff; padding:13px 24px; border-radius:6px; font-weight:500; font-size:15px; transition:background .2s ease, transform .2s ease; display:inline-block;}
+  .btn-primary:hover{background:var(--violet-deep); transform:translateY(-1px);}
+  .btn-ghost{border:1px solid var(--line); padding:13px 24px; border-radius:6px; font-size:15px; transition:border-color .2s ease;}
+  .btn-ghost:hover{border-color:var(--violet);}
+
+  .mock{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    box-shadow:0 30px 60px -24px rgba(27,26,34,0.18); overflow:hidden;
+  }
+  .mock-top{display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid var(--line);}
+  .mock-title{font-family:'Sora'; font-size:14px; font-weight:600;}
+  .mock-badge{background:rgba(91,61,245,0.1); color:var(--violet-deep); font-size:12px; padding:4px 10px; border-radius:12px; font-weight:500;}
+  .mock-body{padding:22px 20px;}
+  .mock-row{display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid var(--line); opacity:0; transform:translateX(-8px); animation:rowIn .5s ease forwards;}
+  .mock-row:nth-child(1){animation-delay:.5s;}
+  .mock-row:nth-child(2){animation-delay:.65s;}
+  .mock-row:nth-child(3){animation-delay:.8s;}
+  @keyframes rowIn{to{opacity:1; transform:translateX(0);}}
+  .mock-row:last-child{border-bottom:none;}
+  .mock-row:hover{background:rgba(91,61,245,0.03);}
+  .mock-client{font-size:14px; font-weight:500;}
+  .mock-meta{font-size:12px; color:var(--mute); margin-top:2px;}
+  .mock-amount{font-family:'Sora'; font-size:15px; font-weight:600;}
+  .status{font-size:11px; padding:3px 9px; border-radius:10px; font-weight:600;}
+  .status.paid{background:rgba(46,158,110,0.12); color:#1F8054;}
+  .status.pending{background:rgba(240,160,40,0.14); color:#B3760E;}
+
+  .logos{padding:36px 0; border-bottom:1px solid var(--line);}
+  .logos-label{font-size:12px; color:var(--mute); text-align:center; margin-bottom:20px; letter-spacing:0.04em;}
+  .logo-row{display:flex; justify-content:center; align-items:center; gap:36px; flex-wrap:wrap;}
+  .logo-row .ph-block{
+    height:28px; width:28px; border-radius:6px; opacity:0.5; object-fit:cover; display:block;
+    transition:opacity .2s ease;
+  }
+  .logo-row .ph-block:hover{opacity:0.7;}
+
+  section{padding:80px 0;}
+  .section-head{max-width:520px; margin-bottom:48px;}
+  .section-head .eyebrow{color:var(--violet-deep); font-size:13px; font-weight:600; margin-bottom:12px;}
+  .section-head h2{font-size:clamp(26px,3.2vw,34px);}
+  .section-head p{margin-top:12px; color:var(--mute); font-size:16px;}
+
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  .feature-row{
+    display:grid; grid-template-columns:200px 1fr; gap:32px;
+    padding:28px 0; border-top:1px solid var(--line); transition:padding-left .2s ease;
+  }
+  .feature-row:hover{padding-left:8px;}
+  .feature-row:last-child{border-bottom:1px solid var(--line);}
+  @media (max-width:640px){.feature-row{grid-template-columns:1fr; gap:8px;}}
+  .feature-name{font-family:'Sora'; font-weight:600; font-size:16px;}
+  .feature-desc{color:var(--mute); font-size:15px; max-width:480px;}
+
+  .cta-band{
+    background:var(--ink); color:#fff; border-radius:16px; padding:56px;
+    display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .cta-band h3{font-size:26px;}
+  .cta-band p{color:rgba(255,255,255,0.6); margin-top:8px; font-size:15px;}
+
+  footer{border-top:1px solid var(--line); padding:36px 0; color:var(--mute); font-size:13px;}
+  footer .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <div class="brand">Ledger<span>line</span></div>
+    <div class="nav-links"><a href="#features">Features</a><a href="#pricing">Pricing</a></div>
+    <a href="#" class="nav-cta">Start free</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap" style="display:contents;">
+    <div>
+      <div class="hero-eyebrow">Built for solo consultants and freelancers</div>
+      <h1>Send the invoice before you forget you did the work.</h1>
+      <p>Track time, generate invoices, and get paid — without spreadsheets, without a finance degree, without the fifteen-tab workaround you're using now.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary">Start free — no card</a>
+        <a href="#" class="btn-ghost">Watch a 90s demo</a>
+      </div>
+    </div>
+    <div class="mock">
+      <div class="mock-top">
+        <div class="mock-title">Invoices — October</div>
+        <div class="mock-badge">$8,240 outstanding</div>
+      </div>
+      <div class="mock-body">
+        <div class="mock-row">
+          <div><div class="mock-client">Halstead Studio</div><div class="mock-meta">Sent Oct 12 · Net 14</div></div>
+          <div style="text-align:right;"><div class="mock-amount">$3,200</div><span class="status paid">Paid</span></div>
+        </div>
+        <div class="mock-row">
+          <div><div class="mock-client">Riverton & Co</div><div class="mock-meta">Sent Oct 18 · Net 30</div></div>
+          <div style="text-align:right;"><div class="mock-amount">$4,540</div><span class="status pending">Pending</span></div>
+        </div>
+        <div class="mock-row">
+          <div><div class="mock-client">North Field Partners</div><div class="mock-meta">Sent Oct 21 · Net 14</div></div>
+          <div style="text-align:right;"><div class="mock-amount">$500</div><span class="status pending">Pending</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="logos">
+  <div class="wrap">
+    <div class="logos-label">Used by independent consultants at</div>
+    <div class="logo-row">
+      <img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%3E%0A%20%20%3Crect%20width%3D%2260%22%20height%3D%2260%22%20rx%3D%2210%22%20fill%3D%22%23F0EEFC%22/%3E%0A%20%20%3Cg%20stroke%3D%22%235B3DF5%22%20stroke-width%3D%222.4%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%2214%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E" alt="Client logo placeholder">
+      <img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%3E%0A%20%20%3Crect%20width%3D%2260%22%20height%3D%2260%22%20rx%3D%2210%22%20fill%3D%22%23F0EEFC%22/%3E%0A%20%20%3Cg%20stroke%3D%22%235B3DF5%22%20stroke-width%3D%222.4%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Crect%20x%3D%2216%22%20y%3D%2216%22%20width%3D%2228%22%20height%3D%2228%22%20rx%3D%226%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E" alt="Client logo placeholder">
+      <img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%3E%0A%20%20%3Crect%20width%3D%2260%22%20height%3D%2260%22%20rx%3D%2210%22%20fill%3D%22%23F0EEFC%22/%3E%0A%20%20%3Cg%20stroke%3D%22%235B3DF5%22%20stroke-width%3D%222.4%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M30%2014%20L44%2044%20L16%2044%20Z%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E" alt="Client logo placeholder">
+      <img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%3E%0A%20%20%3Crect%20width%3D%2260%22%20height%3D%2260%22%20rx%3D%2210%22%20fill%3D%22%23F0EEFC%22/%3E%0A%20%20%3Cg%20stroke%3D%22%235B3DF5%22%20stroke-width%3D%222.4%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16%2030%20a14%2014%200%201%201%2028%200%20a14%2014%200%201%201%20-28%200%22%20stroke-dasharray%3D%226%204%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E" alt="Client logo placeholder">
+      <img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%3E%0A%20%20%3Crect%20width%3D%2260%22%20height%3D%2260%22%20rx%3D%2210%22%20fill%3D%22%23F0EEFC%22/%3E%0A%20%20%3Cg%20stroke%3D%22%235B3DF5%22%20stroke-width%3D%222.4%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18%2022%20h24%20M18%2030%20h24%20M18%2038%20h16%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E" alt="Client logo placeholder">
+    </div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">How it works</div>
+      <h2>Three things, done well, instead of forty done half-heartedly</h2>
+    </div>
+    <div class="feature-row reveal">
+      <div class="feature-name">Time tracking</div>
+      <div class="feature-desc">A single button that starts and stops per client — no timesheets to fill in after the fact.</div>
+    </div>
+    <div class="feature-row reveal">
+      <div class="feature-name">Invoicing</div>
+      <div class="feature-desc">Tracked hours become an invoice in one click, with your rate and terms already applied.</div>
+    </div>
+    <div class="feature-row reveal">
+      <div class="feature-name">Payments</div>
+      <div class="feature-desc">Clients pay by card or bank transfer directly from the invoice — no separate payment link to chase.</div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="cta-band reveal">
+      <div>
+        <h3>Free while you're under $2,000/mo invoiced</h3>
+        <p>Then $12/month, flat. No per-client fees, no percentage taken from payments.</p>
+      </div>
+      <a href="#" class="btn-primary">Start free</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Ledgerline</div>
+    <div>Privacy · Terms</div>
+  </div>
+</footer>
+
+<script>
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'), i*60);
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

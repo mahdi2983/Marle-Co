@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marle & Co — Neighborhood Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF4E6;
+    --forest:#2E4A3D;
+    --forest-deep:#1F3329;
+    --clay:#C9714B;
+    --ink:#2B241C;
+    --line:rgba(43,36,28,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--cream); color:var(--ink); font-family:'Nunito Sans',sans-serif; line-height:1.6; overflow-x:hidden;}
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){.wrap{padding:0 20px;}}
+
+  nav{padding:24px 0;}
+  nav .wrap{display:flex; justify-content:space-between; align-items:center;}
+  .brand{font-family:'Fraunces'; font-size:21px; color:var(--forest-deep);}
+  .nav-links{display:flex; gap:30px; font-size:14px; font-weight:600;}
+  .nav-links a{transition:opacity .2s ease;}
+  .nav-links a:hover{opacity:0.6;}
+  @media (max-width:768px){.nav-links{display:none;}}
+  .order-btn{background:var(--forest); color:var(--cream); padding:10px 20px; border-radius:20px; font-size:14px; font-weight:700; transition:background .2s ease, transform .2s ease; display:inline-block;}
+  .order-btn:hover{background:var(--forest-deep); transform:translateY(-1px);}
+
+  .hero{padding:40px 0 90px; opacity:0; transform:translateY(16px); animation:heroIn .8s ease forwards .1s;}
+  @keyframes heroIn{to{opacity:1; transform:translateY(0);}}
+  .hero-inner{
+    background:var(--forest-deep); color:var(--cream); border-radius:24px;
+    padding:70px 56px; display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  @media (max-width:900px){.hero-inner{grid-template-columns:1fr; padding:44px 28px;}}
+  .hero h1{font-size:clamp(32px,4.6vw,50px); line-height:1.08;}
+  .hero p{margin-top:20px; opacity:0.8; font-size:17px; max-width:420px;}
+  .hero-badge{
+    background:var(--clay); color:var(--cream); display:inline-block;
+    padding:7px 14px; border-radius:20px; font-size:13px; font-weight:700; margin-bottom:20px;
+  }
+  .hero-image{border-radius:16px; overflow:hidden; height:340px;}
+  @media (max-width:900px){.hero-image{height:220px;}}
+
+  .ph-block{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition:transform 5s ease; transform:scale(1.08);
+  }
+  .hero-inner:hover .ph-block{transform:scale(1);}
+
+  section{padding:70px 0;}
+  .section-title{font-size:clamp(26px,3.2vw,36px); color:var(--forest-deep); max-width:520px;}
+  .section-sub{color:var(--ink); opacity:0.65; margin-top:12px; font-size:16px; max-width:480px;}
+
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  .strip-gallery{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:40px;}
+  .strip-gallery .ph{height:180px; border-radius:14px; overflow:hidden;}
+  .strip-gallery .ph .ph-block{
+    transition:transform .4s ease; transform:scale(1);
+  }
+  .strip-gallery .ph:hover .ph-block{transform:scale(1.06);}
+  @media (max-width:800px){.strip-gallery{grid-template-columns:1fr 1fr;}}
+
+  .menu-grid{display:flex; flex-direction:column; margin-top:44px;}
+  .menu-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:20px 0; border-top:2px dotted var(--line); transition:padding-left .2s ease;
+  }
+  .menu-row:hover{padding-left:10px;}
+  .menu-row:last-child{border-bottom:2px dotted var(--line);}
+  .menu-name{font-weight:700; font-size:16px;}
+  .menu-desc{font-size:13px; opacity:0.6; margin-top:4px;}
+  .menu-price{font-family:'Fraunces'; font-size:17px; color:var(--forest-deep); white-space:nowrap;}
+
+  .quote-block{
+    background:var(--clay); color:var(--cream); border-radius:24px;
+    padding:54px; text-align:left; max-width:640px;
+  }
+  .quote-block p{font-family:'Fraunces'; font-size:24px; font-weight:500; line-height:1.35;}
+  .quote-block span{display:block; margin-top:18px; font-size:14px; opacity:0.85; font-family:'Nunito Sans';}
+
+  footer{padding:44px 0 60px; font-size:14px; opacity:0.65;}
+  footer .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <div class="brand">Marle & Co</div>
+    <div class="nav-links"><a href="#menu">Menu</a><a href="#story">Our story</a><a href="#visit">Visit</a></div>
+    <a href="#" class="order-btn">Order ahead</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">Open daily, 7am–4pm</div>
+        <h1>Coffee that remembers your order before you finish saying it.</h1>
+        <p>A small-batch roastery and corner café, run by three people who couldn't find a coffee shop worth staying in — so they built one.</p>
+      </div>
+      <div class="hero-image"><img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22700%22%20height%3D%22700%22%20viewBox%3D%220%200%20700%20700%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%233A5847%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231F3329%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%0A%20%20%20%20%20%20%3Cpattern%20id%3D%22p%22%20width%3D%2224%22%20height%3D%2224%22%20patternTransform%3D%22rotate%2845%29%22%20patternUnits%3D%22userSpaceOnUse%22%3E%0A%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2224%22%20stroke%3D%22rgba%28251%2C244%2C230%2C0.08%29%22%20stroke-width%3D%2210%22/%3E%0A%20%20%20%20%20%20%3C/pattern%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23p%29%22%20opacity%3D%220.5%22/%3E%0A%20%20%3Ctext%20x%3D%2216%22%20y%3D%22684%22%20font-family%3D%22Helvetica%2C%20Arial%2C%20sans-serif%22%20font-size%3D%2211%22%20fill%3D%22%23FBF4E6%22%20opacity%3D%220.85%22%3ECaf%C3%A9%20interior%2C%20placeholder%3C/text%3E%0A%3C/svg%3E" alt="Café interior, placeholder"></div>
+    </div>
+  </div>
+</header>
+
+<section id="menu">
+  <div class="wrap">
+    <div class="reveal">
+      <h2 class="section-title">What's on today</h2>
+      <p class="section-sub">Small menu, changed with the seasons — everything made to order.</p>
+    </div>
+
+    <div class="strip-gallery">
+      <div class="ph reveal"><img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22700%22%20height%3D%22700%22%20viewBox%3D%220%200%20700%20700%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%233A5847%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231F3329%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%0A%20%20%20%20%20%20%3Cpattern%20id%3D%22p%22%20width%3D%2224%22%20height%3D%2224%22%20patternTransform%3D%22rotate%2845%29%22%20patternUnits%3D%22userSpaceOnUse%22%3E%0A%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2224%22%20stroke%3D%22rgba%28251%2C244%2C230%2C0.08%29%22%20stroke-width%3D%2210%22/%3E%0A%20%20%20%20%20%20%3C/pattern%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23p%29%22%20opacity%3D%220.5%22/%3E%0A%20%20%3Ctext%20x%3D%2216%22%20y%3D%22684%22%20font-family%3D%22Helvetica%2C%20Arial%2C%20sans-serif%22%20font-size%3D%2211%22%20fill%3D%22%23FBF4E6%22%20opacity%3D%220.85%22%3ELatte%2C%20placeholder%3C/text%3E%0A%3C/svg%3E" alt="Latte, placeholder"></div>
+      <div class="ph reveal"><img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22700%22%20height%3D%22700%22%20viewBox%3D%220%200%20700%20700%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%233A5847%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231F3329%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%0A%20%20%20%20%20%20%3Cpattern%20id%3D%22p%22%20width%3D%2224%22%20height%3D%2224%22%20patternTransform%3D%22rotate%2845%29%22%20patternUnits%3D%22userSpaceOnUse%22%3E%0A%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2224%22%20stroke%3D%22rgba%28251%2C244%2C230%2C0.08%29%22%20stroke-width%3D%2210%22/%3E%0A%20%20%20%20%20%20%3C/pattern%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23p%29%22%20opacity%3D%220.5%22/%3E%0A%20%20%3Ctext%20x%3D%2216%22%20y%3D%22684%22%20font-family%3D%22Helvetica%2C%20Arial%2C%20sans-serif%22%20font-size%3D%2211%22%20fill%3D%22%23FBF4E6%22%20opacity%3D%220.85%22%3EPastry%2C%20placeholder%3C/text%3E%0A%3C/svg%3E" alt="Pastry, placeholder"></div>
+      <div class="ph reveal"><img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22700%22%20height%3D%22700%22%20viewBox%3D%220%200%20700%20700%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%233A5847%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231F3329%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%0A%20%20%20%20%20%20%3Cpattern%20id%3D%22p%22%20width%3D%2224%22%20height%3D%2224%22%20patternTransform%3D%22rotate%2845%29%22%20patternUnits%3D%22userSpaceOnUse%22%3E%0A%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2224%22%20stroke%3D%22rgba%28251%2C244%2C230%2C0.08%29%22%20stroke-width%3D%2210%22/%3E%0A%20%20%20%20%20%20%3C/pattern%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23p%29%22%20opacity%3D%220.5%22/%3E%0A%20%20%3Ctext%20x%3D%2216%22%20y%3D%22684%22%20font-family%3D%22Helvetica%2C%20Arial%2C%20sans-serif%22%20font-size%3D%2211%22%20fill%3D%22%23FBF4E6%22%20opacity%3D%220.85%22%3ECoffee%20beans%2C%20placeholder%3C/text%3E%0A%3C/svg%3E" alt="Coffee beans, placeholder"></div>
+      <div class="ph reveal"><img class="ph-block" src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22700%22%20height%3D%22700%22%20viewBox%3D%220%200%20700%20700%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%233A5847%22/%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231F3329%22/%3E%0A%20%20%20%20%3C/linearGradient%3E%0A%20%20%20%20%0A%20%20%20%20%20%20%3Cpattern%20id%3D%22p%22%20width%3D%2224%22%20height%3D%2224%22%20patternTransform%3D%22rotate%2845%29%22%20patternUnits%3D%22userSpaceOnUse%22%3E%0A%20%20%20%20%20%20%20%20%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2224%22%20stroke%3D%22rgba%28251%2C244%2C230%2C0.08%29%22%20stroke-width%3D%2210%22/%3E%0A%20%20%20%20%20%20%3C/pattern%3E%0A%20%20%3C/defs%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23g%29%22/%3E%0A%20%20%3Crect%20width%3D%22700%22%20height%3D%22700%22%20fill%3D%22url%28%23p%29%22%20opacity%3D%220.5%22/%3E%0A%20%20%3Ctext%20x%3D%2216%22%20y%3D%22684%22%20font-family%3D%22Helvetica%2C%20Arial%2C%20sans-serif%22%20font-size%3D%2211%22%20fill%3D%22%23FBF4E6%22%20opacity%3D%220.85%22%3ECounter%2C%20placeholder%3C/text%3E%0A%3C/svg%3E" alt="Counter, placeholder"></div>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-row reveal">
+        <div><div class="menu-name">House filter, rotating origin</div><div class="menu-desc">Ask what's in the hopper today</div></div>
+        <div class="menu-price">$4.50</div>
+      </div>
+      <div class="menu-row reveal">
+        <div><div class="menu-name">Oat cortado</div><div class="menu-desc">Double ristretto, house-made oat milk</div></div>
+        <div class="menu-price">$5.25</div>
+      </div>
+      <div class="menu-row reveal">
+        <div><div class="menu-name">Brown butter croissant</div><div class="menu-desc">Baked in-house each morning</div></div>
+        <div class="menu-price">$4.75</div>
+      </div>
+      <div class="menu-row reveal">
+        <div><div class="menu-name">Cardamom bun</div><div class="menu-desc">Weekend mornings only</div></div>
+        <div class="menu-price">$4.25</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="story">
+  <div class="wrap">
+    <div class="quote-block reveal">
+      <p>"We wanted a place where you could sit for two hours and no one would rush you out. So we built the whole café around that idea."</p>
+      <span>— Founders, Marle & Co</span>
+    </div>
+  </div>
+</section>
+
+<footer id="visit">
+  <div class="wrap">
+    <div>Marle & Co — 118 Grove Street</div>
+    <div>Open every day, 7am – 4pm</div>
+  </div>
+</footer>
+
+<script>
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'), i*60);
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marle & Co — Neighborhood Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF4E6;
+    --forest:#2E4A3D;
+    --forest-deep:#1F3329;
+    --clay:#C9714B;
+    --ink:#2B241C;
+    --line:rgba(43,36,28,0.14);
+    --croissant-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 120' fill='%23000000'><path d='M20,70 C50,10 150,10 180,70 C150,95 50,95 20,70 Z' transform='rotate(-12 100 60)'/></svg>");
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--cream); color:var(--ink); font-family:'Nunito Sans',sans-serif; line-height:1.6; overflow-x:hidden;}
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){.wrap{padding:0 20px;}}
+
+  /* Floating pill nav */
+  nav{
+    position:fixed; top:20px; left:50%;
+    transform:translateX(-50%) translateY(-14px);
+    z-index:60;
+    opacity:0; pointer-events:none;
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  nav.is-visible{opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0);}
+  nav .pill{
+    display:flex; align-items:center; gap:26px;
+    background:rgba(251,244,230,0.88); backdrop-filter:blur(10px);
+    border:1px solid var(--line); border-radius:999px;
+    padding:10px 12px 10px 20px; height:52px; box-sizing:border-box;
+    box-shadow:0 14px 30px -14px rgba(43,36,28,0.28);
+    overflow:hidden; white-space:nowrap;
+    transition:width .45s cubic-bezier(.4,0,.2,1), padding .45s cubic-bezier(.4,0,.2,1), background .3s ease;
+    cursor:default;
+  }
+  .brand{font-family:'Fraunces'; font-size:18px; color:var(--forest-deep); flex-shrink:0; transition:opacity .25s ease, transform .3s ease;}
+  .nav-links{display:flex; gap:24px; font-size:14px; font-weight:600; transition:opacity .2s ease, transform .25s ease;}
+  .nav-links a{transition:opacity .2s ease;}
+  .nav-links a:hover{opacity:0.6;}
+  @media (max-width:768px){.nav-links{display:none;}}
+  .order-btn{background:var(--forest); color:var(--cream); padding:9px 18px; border-radius:20px; font-size:13px; font-weight:700; transition:background .2s ease, transform .2s ease, opacity .2s ease; display:inline-block; flex-shrink:0;}
+  .order-btn:hover{background:var(--forest-deep); transform:translateY(-1px);}
+
+  .nav-menu-icon{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:scale(.8); transition:opacity .2s ease .1s, transform .25s ease .1s;
+    pointer-events:none; color:var(--forest-deep);
+  }
+
+  nav.is-collapsed .pill{
+    width:52px; padding:0; cursor:pointer;
+    background:rgba(251,244,230,0.94);
+  }
+  nav.is-collapsed .brand,
+  nav.is-collapsed .nav-links,
+  nav.is-collapsed .order-btn{
+    opacity:0; pointer-events:none; transform:translateX(-8px);
+  }
+  nav.is-collapsed .nav-menu-icon{opacity:1; transform:scale(1); transition-delay:.18s;}
+
+  .hero{padding:40px 0 90px; opacity:0; transform:translateY(16px); animation:heroIn .8s ease forwards .1s;}
+  @keyframes heroIn{to{opacity:1; transform:translateY(0);}}
+  .hero-inner{
+    background:var(--forest-deep); color:var(--cream); border-radius:24px;
+    padding:70px 56px; display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  @media (max-width:900px){.hero-inner{grid-template-columns:1fr; padding:44px 28px;}}
+  .hero h1{font-size:clamp(32px,4.6vw,50px); line-height:1.08;}
+  .hero p{margin-top:20px; opacity:0.8; font-size:17px; max-width:420px;}
+  .hero-badge{
+    background:var(--clay); color:var(--cream); display:inline-block;
+    padding:7px 14px; border-radius:20px; font-size:13px; font-weight:700; margin-bottom:20px;
+  }
+  .hero-image{border-radius:16px; overflow:hidden; height:340px;}
+  @media (max-width:900px){.hero-image{height:220px;}}
+
+  .ph-block{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition:transform 5s ease; transform:scale(1.08);
+  }
+  .hero-inner:hover .ph-block{transform:scale(1);}
+
+  section{padding:70px 0;}
+  .section-title{font-size:clamp(26px,3.2vw,36px); color:var(--forest-deep); max-width:520px;}
+  .section-sub{color:var(--ink); opacity:0.65; margin-top:12px; font-size:16px; max-width:480px;}
+
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  .strip-gallery{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:40px;}
+  .strip-gallery .ph{height:180px; border-radius:14px; overflow:hidden;}
+  .strip-gallery .ph .ph-block{
+    transition:transform .4s ease; transform:scale(1);
+  }
+  .strip-gallery .ph:hover .ph-block{transform:scale(1.06);}
+  @media (max-width:800px){.strip-gallery{grid-template-columns:1fr 1fr;}}
+
+  .menu-grid{display:flex; flex-direction:column; margin-top:44px;}
+  .menu-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:20px 0; border-top:2px dotted var(--line); transition:padding-left .2s ease;
+  }
+  .menu-row:hover{padding-left:10px;}
+  .menu-row:last-child{border-bottom:2px dotted var(--line);}
+  .menu-name{font-weight:700; font-size:16px;}
+  .menu-desc{font-size:13px; opacity:0.6; margin-top:4px;}
+  .menu-price{font-family:'Fraunces'; font-size:17px; color:var(--forest-deep); white-space:nowrap;}
+
+  .quote-block{
+    background:var(--clay); color:var(--cream); border-radius:24px;
+    padding:54px; text-align:left; max-width:640px;
+  }
+  .quote-block p{font-family:'Fraunces'; font-size:24px; font-weight:500; line-height:1.35;}
+  .quote-block span{display:block; margin-top:18px; font-size:14px; opacity:0.85; font-family:'Nunito Sans';}
+
+  footer{padding:44px 0 60px; font-size:14px; opacity:0.65;}
+  footer .wrap{display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+
+  /* Coverflow */
+  .cf-section{margin-top:44px; display:flex; flex-direction:column; align-items:center;}
+  .cf-stage{
+    position:relative; width:100%; height:460px;
+    display:flex; align-items:center; justify-content:center;
+    perspective:1300px;
+    border-radius:24px; overflow:hidden;
+    background:var(--forest);
+    box-shadow:0 20px 50px -20px rgba(31,51,41,0.35);
+  }
+  .cf-bg{position:absolute; inset:0; z-index:0; border-radius:24px; overflow:hidden;}
+  .cf-bg img{width:100%; height:100%; object-fit:cover; filter:brightness(0.58) saturate(0.9) blur(22px); transform:scale(1.15); transition:opacity 700ms ease;}
+  .cf-bg::after{content:''; position:absolute; inset:0; background:radial-gradient(circle at center, rgba(46,74,61,0.1) 0%, rgba(31,51,41,0.72) 100%);}
+
+  .cf-card{
+    position:absolute; width:230px; height:340px; border-radius:16px; overflow:hidden;
+    background:var(--forest-deep); border:1px solid rgba(251,244,230,0.14);
+    transition:transform 700ms cubic-bezier(.25,1,.5,1), opacity 700ms ease, filter 700ms ease;
+    cursor:pointer; z-index:1;
+  }
+  .cf-card img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .cf-shade{position:absolute; inset:0; background:linear-gradient(180deg, rgba(20,30,25,0.35) 0%, rgba(20,30,25,0.05) 25%, rgba(20,30,25,0.7) 62%, rgba(20,30,25,0.96) 100%);}
+  .cf-content{
+    position:relative; width:100%; height:100%; padding:16px 16px 20px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    text-align:center; color:var(--cream); opacity:0; transform:translateY(12px);
+    transition:opacity 400ms ease, transform 400ms ease;
+  }
+  .cf-card.is-center .cf-content{opacity:1; transform:translateY(0);}
+  .cf-price{
+    align-self:flex-end; font-family:'Fraunces'; font-size:14px; font-weight:600;
+    background:var(--clay); color:var(--cream); padding:4px 10px; border-radius:12px;
+  }
+  .cf-body h4{font-family:'Fraunces'; font-size:19px; color:#fff; margin:0; text-transform:uppercase; letter-spacing:0.02em;}
+  .cf-body span{display:block; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cream); opacity:0.75; margin-top:2px;}
+  .cf-rule{width:28px; height:2px; background:var(--clay); border-radius:2px; margin:9px auto;}
+  .cf-body p{font-size:12.5px; font-style:italic; color:rgba(251,244,230,0.9); max-width:190px; margin:0 auto; line-height:1.35;}
+
+  .cf-arrow{
+    position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:50%;
+    background:rgba(0,0,0,0.4); border:1px solid rgba(251,244,230,0.25); color:#fff;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:20;
+    transition:background .2s ease;
+  }
+  .cf-arrow:hover{background:rgba(0,0,0,0.6);}
+  .cf-prev{left:16px;} .cf-next{right:16px;}
+
+  .cf-dots{display:flex; gap:8px; margin-top:18px;}
+  .cf-dots button{
+    height:8px; width:8px; border-radius:8px; background:rgba(46,74,61,0.3); border:none; cursor:pointer;
+    transition:all .3s ease; padding:0;
+  }
+  .cf-dots button.active{width:26px; background:var(--forest);}
+  @media (max-width:640px){
+    .cf-stage{height:400px;}
+    .cf-card{width:190px; height:290px;}
+  }
+
+  /* Scroll reveal intro */
+  .mc-intro{
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:var(--cream);
+  }
+  .mc-intro-title{
+    font-family:'Fraunces'; font-weight:600; color:var(--forest-deep);
+    font-size:clamp(40px, 9vw, 120px); letter-spacing:-0.01em; text-align:center;
+  }
+  .mc-reveal{position:relative; background:var(--cream);}
+  .mc-reveal-pin{
+    position:sticky; top:0; width:100%; height:100vh; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--cream);
+  }
+  .mc-mask-layer{
+    width:100%; height:100%; position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    -webkit-mask-image:var(--croissant-mask);
+    mask-image:var(--croissant-mask);
+    -webkit-mask-position:50% 50%; mask-position:50% 50%;
+    -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+    -webkit-mask-size:var(--maskW, 260px); mask-size:var(--maskW, 260px);
+  }
+  .mc-mask-media{
+    width:100%; height:100%; object-fit:cover; transform:scale(1.05);
+    will-change:transform;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+<section class="mc-intro">
+  <span class="mc-intro-title">Marle &amp; Co</span>
+</section>
+
+<div class="mc-reveal" id="mcReveal">
+  <div class="mc-reveal-pin" id="mcRevealPin">
+    <div class="mc-mask-layer" id="mcMaskLayer">
+      <img id="mcMaskMedia" class="mc-mask-media" src="https://images.pexels.com/photos/4906424/pexels-photo-4906424.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Inside Marle &amp; Co">
+    </div>
+  </div>
+</div>
+
+<nav id="siteNav">
+  <div class="pill" id="navPill">
+    <div class="brand">Marle & Co</div>
+    <div class="nav-links"><a href="#menu">Menu</a><a href="#story">Our story</a><a href="#visit">Visit</a></div>
+    <a href="#" class="order-btn">Order ahead</a>
+    <div class="nav-menu-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </div>
+  </div>
+</nav>
+
+<div id="mainStart"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">Open daily, 7am–4pm</div>
+        <h1>Coffee that remembers your order before you finish saying it.</h1>
+        <p>A small-batch roastery and corner café, run by three people who couldn't find a coffee shop worth staying in — so they built one.</p>
+      </div>
+      <div class="hero-image"><img class="ph-block" src="https://images.pexels.com/photos/4906424/pexels-photo-4906424.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Café interior, placeholder" loading="lazy"></div>
+    </div>
+  </div>
+</header>
+
+<section id="menu">
+  <div class="wrap">
+    <div class="reveal">
+      <h2 class="section-title">What's on today</h2>
+      <p class="section-sub">Small menu, changed with the seasons — everything made to order.</p>
+    </div>
+
+    <div class="cf-section">
+      <div class="cf-stage" id="cfStage">
+        <div class="cf-bg"><img id="cfBg" src="" alt=""></div>
+        <div class="cf-card" data-idx="0">
+          <img src="https://images.pexels.com/photos/585750/pexels-photo-585750.jpeg?auto=compress&cs=tinysrgb&w=700" alt="House filter coffee">
+          <div class="cf-shade"></div>
+          <div class="cf-content">
+            <div class="cf-price">$4.50</div>
+            <div class="cf-body">
+              <h4>House Filter</h4>
+              <span>Rotating Origin</span>
+              <div class="cf-rule"></div>
+              <p>Ask what's in the hopper today — a new origin every week.</p>
+            </div>
+          </div>
+        </div>
+        <div class="cf-card" data-idx="1">
+          <img src="https://images.pexels.com/photos/6867/art-heart-caffeine-coffee.jpg?auto=compress&cs=tinysrgb&w=700" alt="Oat cortado">
+          <div class="cf-shade"></div>
+          <div class="cf-content">
+            <div class="cf-price">$5.25</div>
+            <div class="cf-body">
+              <h4>Oat Cortado</h4>
+              <span>Double Ristretto</span>
+              <div class="cf-rule"></div>
+              <p>Pulled short, finished with our house-made oat milk.</p>
+            </div>
+          </div>
+        </div>
+        <div class="cf-card" data-idx="2">
+          <img src="https://images.pexels.com/photos/30666847/pexels-photo-30666847.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Brown butter croissant">
+          <div class="cf-shade"></div>
+          <div class="cf-content">
+            <div class="cf-price">$4.75</div>
+            <div class="cf-body">
+              <h4>Brown Butter</h4>
+              <span>Croissant</span>
+              <div class="cf-rule"></div>
+              <p>Laminated by hand, baked in-house every morning.</p>
+            </div>
+          </div>
+        </div>
+        <div class="cf-card" data-idx="3">
+          <img src="https://images.pexels.com/photos/27349262/pexels-photo-27349262.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Cardamom bun at the counter">
+          <div class="cf-shade"></div>
+          <div class="cf-content">
+            <div class="cf-price">$4.25</div>
+            <div class="cf-body">
+              <h4>Cardamom Bun</h4>
+              <span>Weekend Only</span>
+              <div class="cf-rule"></div>
+              <p>Spiced and glazed — Saturday and Sunday mornings only.</p>
+            </div>
+          </div>
+        </div>
+        <button class="cf-arrow cf-prev" id="cfPrev" aria-label="Previous item">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button class="cf-arrow cf-next" id="cfNext" aria-label="Next item">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div class="cf-dots" id="cfDots"></div>
+    </div>
+  </div>
+</section>
+
+<section id="story">
+  <div class="wrap">
+    <div class="quote-block reveal">
+      <p>"We wanted a place where you could sit for two hours and no one would rush you out. So we built the whole café around that idea."</p>
+      <span>— Founders, Marle & Co</span>
+    </div>
+  </div>
+</section>
+
+<footer id="visit">
+  <div class="wrap">
+    <div>Marle & Co — 118 Grove Street</div>
+    <div>Open every day, 7am – 4pm</div>
+  </div>
+</footer>
+
+<script>
+// Coverflow carousel
+(function(){
+  const cards = Array.from(document.querySelectorAll('.cf-card'));
+  const total = cards.length;
+  const bgImg = document.getElementById('cfBg');
+  const dotsWrap = document.getElementById('cfDots');
+  const stage = document.getElementById('cfStage');
+  if (!cards.length) return;
+
+  let current = 0;
+  let autoplayTimer = null;
+  let hovered = false;
+
+  cards.forEach((_, i) => {
+    const dot = document.createElement('button');
+    if (i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function render(){
+    cards.forEach((card, idx) => {
+      const offset = (idx - current + total) % total;
+      let t = 'translateX(0px) scale(0.4) rotateY(0deg)';
+      let opacity = 0, z = 0, filter = 'brightness(0.4)';
+      let isCenter = false;
+
+      if (offset === 0) {
+        isCenter = true;
+        t = 'translateX(0px) scale(1) rotateY(0deg)';
+        opacity = 1; z = 30; filter = 'brightness(1)';
+      } else if (offset === 1) {
+        t = 'translateX(190px) scale(0.8) rotateY(-22deg)';
+        opacity = 0.65; z = 20; filter = 'brightness(0.7)';
+      } else if (offset === total - 1) {
+        t = 'translateX(-190px) scale(0.8) rotateY(22deg)';
+        opacity = 0.65; z = 20; filter = 'brightness(0.7)';
+      } else if (offset === 2) {
+        t = 'translateX(340px) scale(0.62) rotateY(-34deg)';
+        opacity = 0.3; z = 10; filter = 'brightness(0.5)';
+      } else if (offset === total - 2) {
+        t = 'translateX(-340px) scale(0.62) rotateY(34deg)';
+        opacity = 0.3; z = 10; filter = 'brightness(0.5)';
+      }
+
+      card.style.transform = t;
+      card.style.opacity = opacity;
+      card.style.zIndex = z;
+      card.style.filter = filter;
+      card.classList.toggle('is-center', isCenter);
+    });
+
+    const img = cards[current].querySelector('img');
+    bgImg.src = img.src;
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function goTo(i){ current = ((i % total) + total) % total; render(); }
+  function next(){ goTo(current + 1); }
+  function prev(){ goTo(current - 1); }
+
+  document.getElementById('cfNext').addEventListener('click', next);
+  document.getElementById('cfPrev').addEventListener('click', prev);
+  cards.forEach((card, idx) => card.addEventListener('click', () => { if (idx !== current) goTo(idx); }));
+
+  stage.addEventListener('mouseenter', () => hovered = true);
+  stage.addEventListener('mouseleave', () => hovered = false);
+
+  function startAutoplay(){
+    autoplayTimer = setInterval(() => { if (!hovered) next(); }, 5000);
+  }
+  startAutoplay();
+
+  window.addEventListener('keydown', (e) => {
+    const rect = stage.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (!inView) return;
+    if (e.key === 'ArrowLeft') prev();
+    if (e.key === 'ArrowRight') next();
+  });
+
+  let touchStartX = 0;
+  stage.addEventListener('touchstart', (e) => touchStartX = e.touches[0].clientX);
+  stage.addEventListener('touchend', (e) => {
+    const diff = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(diff) > 45) diff < 0 ? next() : prev();
+  });
+
+  render();
+})();
+</script>
+<script>
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'), i*60);
+      io.unobserve(e.target);
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+
+<script>
+// Scroll-driven croissant mask reveal
+(function(){
+  if (typeof window === 'undefined' || !window.gsap || !window.ScrollTrigger) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const container = document.getElementById('mcReveal');
+  const pin = document.getElementById('mcRevealPin');
+  const maskLayer = document.getElementById('mcMaskLayer');
+  const media = document.getElementById('mcMaskMedia');
+  if (!container || !pin || !maskLayer) return;
+
+  function getInitialSize(){
+    if (window.innerWidth < 640) return 170;
+    if (window.innerWidth < 1024) return 240;
+    return 300;
+  }
+
+  const initialSize = getInitialSize();
+  maskLayer.style.setProperty('--maskW', initialSize + 'px');
+
+  gsap.timeline({
+    scrollTrigger:{
+      trigger: container,
+      start: 'top top',
+      end: () => '+=' + (window.innerHeight * 2.2),
+      scrub: 1.2,
+      pin: pin,
+      pinSpacing: true,
+      anticipatePin: 1,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const start = getInitialSize();
+        const current = start + Math.pow(progress, 2.2) * 3200;
+        maskLayer.style.setProperty('--maskW', current + 'px');
+      }
+    }
+  }).to(media, { scale: 1.15, ease: 'none' }, 0);
+})();
+</script>
+
+<script>
+// Floating pill nav: appears after the intro/reveal, collapses on scroll down, expands on scroll up
+(function(){
+  const nav = document.getElementById('siteNav');
+  const pill = document.getElementById('navPill');
+  const sentinel = document.getElementById('mainStart');
+  if (!nav || !pill || !sentinel) return;
+
+  const EXPAND_SCROLL_THRESHOLD = 80;
+  let lastScrollY = window.scrollY;
+  let scrollPositionOnCollapse = 0;
+  let isExpanded = true;
+  let pastIntro = false;
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      pastIntro = entry.boundingClientRect.top <= 0;
+      nav.classList.toggle('is-visible', pastIntro);
+    });
+  }, { threshold: 0, rootMargin: '0px' });
+  io.observe(sentinel);
+
+  function setExpanded(state){
+    isExpanded = state;
+    nav.classList.toggle('is-collapsed', !state);
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!pastIntro) { lastScrollY = window.scrollY; return; }
+    const current = window.scrollY;
+    const previous = lastScrollY;
+
+    if (isExpanded && current > previous && current > 150) {
+      setExpanded(false);
+      scrollPositionOnCollapse = current;
+    } else if (!isExpanded && current < previous && (scrollPositionOnCollapse - current > EXPAND_SCROLL_THRESHOLD)) {
+      setExpanded(true);
+    }
+    lastScrollY = current;
+  }, { passive: true });
+
+  pill.addEventListener('click', (e) => {
+    if (!isExpanded) {
+      e.preventDefault();
+      setExpanded(true);
+    }
+  });
+  pill.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => {
+    if (!isExpanded) e.preventDefault(); else e.stopPropagation();
+  }));
+})();
+</script>
+</body>
+</html>
